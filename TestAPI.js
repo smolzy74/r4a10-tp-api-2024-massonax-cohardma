@@ -2,29 +2,39 @@
 ///////////////////////////AFFICHER UN CERTAINS NOMBRES DE BLAGUES ALEATOIRE//////////////////////////////////
 const numberOfRequests = 5;
 let currentJoke;
+
+const category = "animal"; 
+getRandomJokeByCategory(category)
+    .then(joke => {
+      console.log(`Blague aléatoire dans la catégorie "${category}": ${joke}`);
+    });
 /////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////
 
-function getRandomJoke(){
-  fetch("https://api.chucknorris.io/jokes/random")
+function getRandomJoke() {
+  return fetch("https://api.chucknorris.io/jokes/random")
     .then(res => {
+      if (!res.ok) {
+        throw new Error(`La requête a échoué avec le code d'état ${res.status}`);
+      }
       return res.json();
-    })/*
+    })
     .then(data => {
-      currentJoke = data.value;
-      return data.value;
-    });*/
+      return data.value; // Retourne la valeur de la blague aléatoire
+    })
+    .catch(error => {
+      console.error("Une erreur s'est produite :", error);
+      throw error; // Relancer l'erreur pour la gérer plus tard si nécessaire
+    });
 }
 
-<<<<<<< HEAD
+
 /////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////
 
 ////////////////////////////RECHERCHE D'UNE BLAGUE AVEC UNE CHAINE DE CARACTERES/////////////////////////////////
-=======
->>>>>>> 0dcaa73 (ajout des boutons)
 
 function searchJoke(query) {
   const apiUrl = `https://api.chucknorris.io/jokes/search?query=${encodeURIComponent(query)}`;
@@ -115,7 +125,6 @@ async function categorieJokeOnClick(){
   champ.textContent = chaine;
 }*/
 
-<<<<<<< HEAD
 //////////////////////////AFFICHER UNE BLAGUE ALEATOIRE D'UNE CATEGORIE//////////////////////////////////
 function getRandomJokeByCategory(category) {
     const apiUrl = `https://api.chucknorris.io/jokes/random?category=${encodeURIComponent(category)}`;
@@ -135,13 +144,8 @@ function getRandomJokeByCategory(category) {
       });
   }
   
-  const category = "animal"; 
-getRandomJokeByCategory(category)
-    .then(joke => {
-      console.log(`Blague aléatoire dans la catégorie "${category}": ${joke}`);
-    });
+
   
-=======
 
 async function categorieJokeOnClick() {
   let champ = document.getElementById("resultatField");
@@ -159,4 +163,3 @@ async function categorieJokeOnClick() {
     console.error("Une erreur s'est produite :", error);
   }
 }
->>>>>>> 0dcaa73 (ajout des boutons)
