@@ -180,22 +180,38 @@ function getRandomJokeByCategory(category) {
       });
   }
   
-
+  function creerBoutons(liste, fonction) {
+    const conteneurListe = document.getElementById("category");
+  
+    conteneurListe.innerHTML = "";
   
 
-async function categorieJokeOnClick() {
-  let champ = document.getElementById("resultatField");
-
-  try {
-    const categories = await getJokeCategories(); // Attend la résolution de la promesse
-    console.log("Liste des catégories disponibles :");
-    console.log(categories);
-    let chaine = "";
-    categories.forEach(category => {
-      chaine += category + " ";
+    liste.forEach(mot => {
+      const bouton = document.createElement("button");
+      bouton.textContent = mot;
+      bouton.addEventListener("click", () => {
+        fonction(mot);
+      });
+  
+      const elementLi = document.createElement("li");
+      elementLi.appendChild(bouton);
+  
+      conteneurListe.appendChild(elementLi);
     });
-    champ.textContent = chaine;
-  } catch (error) {
-    console.error("Une erreur s'est produite :", error);
   }
-}
+  
+  
+
+  async function categorieJokeOnClick() {
+    let champ = document.getElementById("category");
+  
+    try {
+      const categories = await getJokeCategories(); 
+      console.log("Liste des catégories disponibles :");
+      console.log(categories);
+      creerBoutons(categories, randomJokeOnClick());
+    } catch (error) {
+      console.error("Une erreur:", error);
+    }
+  }
+
