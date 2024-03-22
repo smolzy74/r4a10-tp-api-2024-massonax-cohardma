@@ -1,4 +1,5 @@
  
+///////////////////////////AFFICHER UN CERTAINS NOMBRES DE BLAGUES ALEATOIRE//////////////////////////////////
 const numberOfRequests = 5;
 
 for (let i = 0; i < numberOfRequests; i++) {
@@ -15,6 +16,7 @@ for (let i = 0; i < numberOfRequests; i++) {
 /////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////
 
+////////////////////////////RECHERCHE D'UNE BLAGUE AVEC UNE CHAINE DE CARACTERES/////////////////////////////////
 
 function searchJoke(query) {
   const apiUrl = `https://api.chucknorris.io/jokes/search?query=${encodeURIComponent(query)}`;
@@ -48,7 +50,7 @@ searchJoke(searchTerm)
 
 
 
-
+/////////////////////////LISTE DES CATEGORIES////////////////////////////////////
 function getJokeCategories() {
   const apiUrl = "https://api.chucknorris.io/jokes/categories";
 
@@ -72,4 +74,28 @@ getJokeCategories()
     });
   });
 
-
+//////////////////////////AFFICHER UNE BLAGUE ALEATOIRE D'UNE CATEGORIE//////////////////////////////////
+function getRandomJokeByCategory(category) {
+    const apiUrl = `https://api.chucknorris.io/jokes/random?category=${encodeURIComponent(category)}`;
+  
+    return fetch(apiUrl)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Erreur HTTP! Statut: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        return data.value;
+      })
+      .catch(error => {
+        console.error('Une erreur s\'est produite:', error);
+      });
+  }
+  
+  const category = "animal"; 
+getRandomJokeByCategory(category)
+    .then(joke => {
+      console.log(`Blague aléatoire dans la catégorie "${category}": ${joke}`);
+    });
+  
