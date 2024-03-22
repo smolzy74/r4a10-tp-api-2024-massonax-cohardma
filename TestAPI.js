@@ -162,6 +162,19 @@ async function categorieJokeOnClick(){
 }*/
 
 //////////////////////////AFFICHER UNE BLAGUE ALEATOIRE D'UNE CATEGORIE//////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
 function getRandomJokeByCategory(category) {
     const apiUrl = `https://api.chucknorris.io/jokes/random?category=${encodeURIComponent(category)}`;
   
@@ -202,14 +215,14 @@ function getRandomJokeByCategory(category) {
   
   
 
-  async function categorieJokeOnClick() {
+  async function categorieJoke() {
     let champ = document.getElementById("category");
   
     try {
       const categories = await getJokeCategories(); 
       console.log("Liste des catégories disponibles :");
       console.log(categories);
-      creerBoutons(categories, randomJokeOnClick());
+      creerBoutons(categories, randomJokeOnClick);
     } catch (error) {
       console.error("Une erreur:", error);
     }

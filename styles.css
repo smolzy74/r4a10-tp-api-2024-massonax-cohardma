@@ -1,4 +1,12 @@
 /* Importation de la police Roboto */
+
+@font-face {
+  font-family: 'Chuck Norris'; 
+  src: url('Chuck Norris.otf') format('otf'); 
+}
+
+
+
 @import url(https://fonts.googleapis.com/css?family=Roboto);
 
 /* Définition des principales couleurs */
@@ -14,17 +22,20 @@
 * {
   color: var(--text-color);
 }
+p {
+  background-image: url('images/symbole-chuckNorris.jpg');
+  background-repeat:round;
+}
 
 body {
-  background-color: var(--background);
-  font: 14pt Roboto, Arial, sans-serif;
+  background-image: url('images/background-chuckNorris.jpg');
+  font-family: 'Chuck Norris', Roboto, Arial, sans-serif;
   margin: 0;
   padding: 0;
   width: 90%;
   margin: 40px auto;
 }
 
-/* Paragraphes "Aucun résultat..." et "Aucune recherche..." */
 p.info-vide {
   font-style: italic;
 }
@@ -32,12 +43,13 @@ p.info-vide {
 /* Partie En-tête */
 h1 {
   text-align: center;
-  font-variant: small-caps;
+  font-family: 'Chuck Norris';
   font-size: 2.5em;
-  color: var(--main-green);
 }
 
 #explication {
+  
+
   font-size: 1.2em;
 }
 
@@ -165,4 +177,10 @@ h1 {
   #section-favoris {
     flex: 0;
   }
+ 
+  
+  
+
+ 
+ 
 }

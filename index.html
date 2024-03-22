@@ -3,21 +3,19 @@
   <head>
     <title>Recherche d'offres d'emploi</title>
     <meta charset="utf-8" />
-    <link rel="shortcut icon" type="image/x-icon" href="favicon-js.ico" />
+    <link rel="shortcut icon" type="image/x-icon" href="images/symbole-chuckNorris.jpg" />
     <link rel="stylesheet" href="styles.css" />
     <script src="TestAPI.js"></script>
   </head>
 
   <body>
     <header>
-      <h1>Recherche d'offres d'emploi</h1>
+      <h1>Recherche de ChuckNorrisFact</h1>
 
       <p id="explication">
-        Cette page permet de rechercher des offres d'emploi via l'API publique
-        de <a href="https://www.indeed.fr/" target="_blank">indeed.fr</a>.<br />
-        Saisir le nom d'une ville, d'un poste, ... pour rechercher les postes
-        correspondants, et enregistrer vos recherches favorites pour les
-        retrouver facilement.
+        Si vous vous demmander "Qui est CHUCK NORRIS ?" ce site est pour vous.Tout les meilleurs anecdote de CHUCK NORRIS sont sur 
+        ce site.<br>ATTENTION :Certaines anecdote de CHUCK NORRIS sont VIOLENTE alors pas de tapette ici.<br>Voici notre DIEUX a tous: 
+        <a href="https://chucknorris.com/" target="_blank">CHUCK NORRIS</a>.<br />
       </p>
     </header>
     <hr />
@@ -71,20 +69,12 @@
           <li>
             <button id="joke_random_button" onclick="randomJokeOnClick()">Obtenir une blague aléatoire</button>
           </li>
-          <li>
-            <button ad="joke_categorie_button" onclick="categorieJokeOnClick()">Obtenir les différentes catégorie de blagues</button>
-          </li>
+
         </ul>
         <h2>Resultat</h2>
         <ul id="resultatList">
         </ul>
         <p id="resultatField">ici se trouvera le resultat</p>
-        <div id="bloc-resultats">
-          <p class="res">Résultat 1 ...</p>
-          <p class="res">Résultat 2 ...</p>
-          <p class="res">Résultat 3 ...</p>
-          <p class="info-vide">(Aucun résultat trouvé)</p>
-        </div>
       </section>
 
       <!-- Section de séparation (avec la bordure verte) -->
@@ -100,4 +90,5 @@
       </section>
     </main>
   </body>
+  <script>categorieJoke()</script>
 </html>
