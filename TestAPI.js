@@ -12,6 +12,21 @@ getRandomJokeByCategory(category)
 /////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////
 
+function viderResultat() {
+  let ulElement = document.getElementById("resultatField");
+  ulElement.innerHTML = ""; // Efface le contenu de l'élément UL
+}
+
+function ajouterResultat(contenu) {
+  let ulElement = document.getElementById("resultatField");
+  let liElement = document.createElement("li");
+  liElement.textContent = contenu;
+  ulElement.appendChild(liElement);
+}
+
+
+
+
 function getRandomJoke() {
   return fetch("https://api.chucknorris.io/jokes/random")
     .then(res => {
@@ -41,12 +56,20 @@ function searchJoke(query) {
 
   return fetch(apiUrl)
     .then(res => {
+      if (!res.ok) {
+        throw new Error(`La requête a échoué avec le code d'état ${res.status}`);
+      }
       return res.json();
     })
     .then(data => {
       return data.result.map(joke => joke.value);
+    })
+    .catch(error => {
+      console.error("Une erreur s'est produite :", error);
+      throw error; // Relancer l'erreur pour la gérer plus tard si nécessaire
     });
 }
+
 
 const searchTerm = "sun"; 
 /*
@@ -71,6 +94,7 @@ searchJoke(searchTerm)
 
 /////////////////////////LISTE DES CATEGORIES////////////////////////////////////
 function getJokeCategories() {
+  viderResultat()
   const apiUrl = "https://api.chucknorris.io/jokes/categories";
 
   return fetch(apiUrl)
@@ -88,20 +112,32 @@ function getJokeCategories() {
 
 
 
-function  rechercheButtonOnClick(){
-  let champ = document.getElementById("resultatField");
-  let saisie = document.getElementById("rechercheField").value
-  console.log(saisie);
-  champ.textContent = searchJoke(saisie);
+async function rechercheButtonOnClick() {
+  viderResultat()
+  let saisie = document.getElementById("rechercheField").value;
+
+  try {
+    const jokes = await searchJoke(saisie); // Attend la résolution de la promesse
+    for(i=0;i<10;i+=1){
+      ajouterResultat(jokes[i]);
+    }
+
+
+
+    // Sélectionner les 10 premières blagues et les rejoindre avec des retours à la ligne
+    } catch (error) {
+    console.error("Une erreur s'est produite :", error);
+  }
 }
 
+
 async function randomJokeOnClick() {
-  let champ = document.getElementById("resultatField");
+  viderResultat()
   try {
     const joke = await getRandomJoke(); // Attend la résolution de la promesse
     console.log("Blague aléatoire :");
     console.log(joke);
-    champ.textContent = joke; // Met à jour le contenu du champ avec la blague aléatoire
+    ajouterResultat(joke);
   } catch (error) {
     console.error("Une erreur s'est produite :", error);
   }
