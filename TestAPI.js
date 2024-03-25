@@ -1,23 +1,68 @@
  
 ///////////////////////////AFFICHER UN CERTAINS NOMBRES DE BLAGUES ALEATOIRE//////////////////////////////////
 const numberOfRequests = 5;
-let currentJoke;
+let displayedJokes = [];
+let favoris = [];
 
 /////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////
 
 function viderResultat() {
-  let ulElement = document.getElementById("resultatField");
+  let ulElement = document.getElementById("resultatList");
   ulElement.innerHTML = ""; // Efface le contenu de l'élément UL
+  displayedJokes = [];
 }
 
-function ajouterResultat(contenu) {
-  console.log(contenu)
-  let ulElement = document.getElementById("resultatField");
+function ajouterResultat(contenu, index) {
+  let ulElement = document.getElementById("resultatList");
   let liElement = document.createElement("li");
-  liElement.textContent = contenu;
+  let bouton = document.createElement("button");
+  bouton.id = "btn-favoris";
+  bouton.type = "button";
+  bouton.title = "Ajouter la recherche aux favoris";
+  bouton.textContent = "FAV";
+  bouton.onclick = function() {
+    ajouterFavoris(index);
+  };
+  let texteElement = document.createTextNode(contenu);
+  liElement.appendChild(bouton);
+  liElement.appendChild(texteElement);
   ulElement.appendChild(liElement);
+}
+
+function ajouterFavoris(index){
+  favoris.push(displayedJokes[index]);
+  actualiserFavoris();
+}
+
+function actualiserFavoris(){
+  let champ =  document.getElementById("favorisList");
+  champ.innerHTML = "";
+  let i = 0;
+  favoris.forEach(joke => {
+    let liElement = docume nt.createElement("li");
+    let bouton = document.createElement("button");
+    bouton.id = "btn-favoris";
+    bouton.type = "button";
+    bouton.title = "Ajouter la recherche aux favoris";
+    bouton.textContent = "FAV"+i;
+    bouton.onclick = function() {
+      console.log(i);
+      retirerFavoris(i);
+    };
+    let texteElement = document.createTextNode(joke);
+
+    liElement.appendChild(bouton);
+    liElement.appendChild(texteElement);
+    champ.appendChild(liElement);
+    i+=1
+  });
+}
+
+function retirerFavoris(index){
+  favoris.splice(index,1);
+  actualiserFavoris();
 }
 
 
@@ -121,9 +166,9 @@ async function rechercheButtonOnClick() {
 
   try {
     const jokes = await searchJoke(saisie); // Attend la résolution de la promesse
-    console.log(jokes)
+    displayedJokes = jokes;
     for(i=0;i<10;i+=1){
-      ajouterResultat(jokes[i]);
+      ajouterResultat(jokes[i],i);
     }
 
 
@@ -139,9 +184,8 @@ async function randomJokeOnClick() {
   viderResultat()
   try {
     const joke = await getRandomJoke(); // Attend la résolution de la promesse
-    console.log("Blague aléatoire :");
-    console.log(joke);
-    ajouterResultat(joke);
+    displayedJokes = [joke];
+    ajouterResultat(joke,0);
   } catch (error) {
     console.error("Une erreur s'est produite :", error);
   }
@@ -158,16 +202,17 @@ function supprimerDoublons(liste) {
 
 //////////////////////////AFFICHER UNE BLAGUE ALEATOIRE D'UNE CATEGORIE//////////////////////////////////
 async function getRandomJokeByCategory(category) {
-  console.log("click2");
+
   let jokes=[];
   for(i=0;i<10;i++){
     jokes.push(await getJokeFromCategory(category));
   }
   jokes = supprimerDoublons(jokes);
-    console.log(jokes);
     viderResultat()
+    displayedJokes = jokes;
+    let j = 0;
     jokes.forEach(joke => {
-      ajouterResultat(joke);
+      ajouterResultat(joke,j++);
     });
     
   }
@@ -182,7 +227,6 @@ async function getRandomJokeByCategory(category) {
       const bouton = document.createElement("button");
       bouton.textContent = mot;
       bouton.addEventListener("click", () => {
-        console.log("click");
         fonction(mot);
       });
   
@@ -200,8 +244,6 @@ async function getRandomJokeByCategory(category) {
   
     try {
       const categories = await getJokeCategories(); 
-      console.log("Liste des catégories disponibles :");
-      console.log(categories);
       creerBoutons(categories, getRandomJokeByCategory);
     } catch (error) {
       console.error("Une erreur:", error);
