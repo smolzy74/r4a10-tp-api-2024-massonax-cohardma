@@ -9,8 +9,12 @@ const localStorageFavorisId = "mesFavorisList";
 /////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////
 
-
+/////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////
 // requete a l'API
+/////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////
+
 
 //utilise l'API pour obtenir une blague aléatoire
 function getRandomJoke() {
@@ -88,8 +92,11 @@ function getJokeCategories() {
 
 
 
-
+/////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////
 // modification du HTML
+/////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////
 
 //vide la page de tous les résultat affiché
 function viderResultat() {
@@ -107,17 +114,36 @@ function ajouterResultat(contenu, index) {
   bouton.type = "button";
   bouton.title = "Ajouter la recherche aux favoris";
   let imageEtoile = document.createElement("img");
-  imageEtoile.src = "images/etoile-vide.svg";
+  if(estPresentDansListe(contenu,favoris)){
+    imageEtoile.src = "images/etoile-pleine.svg";
+    bouton.className = "inFavoris";
+  }else{
+    imageEtoile.src = "images/etoile-vide.svg";
+    bouton.className ="notInFavoris";
+  }
   imageEtoile.width = "22";
   bouton.appendChild(imageEtoile);
   bouton.onclick = function() {
-    ajouterFavoris(index);
+    if(this.classList.contains("inFavoris")){
+      try{
+      supprimerFavoris(favoris.indexOf(contenu));
+      bouton.className ="notInFavoris";
+      }catch{
+        ajouterFavoris(index);
+        bouton.className ="inFavoris";
+      }
+    }else{
+      ajouterFavoris(index);
+      bouton.className ="inFavoris";
+    }
+    miseAJourEtoilesResultat();
   };
   let texteElement = document.createTextNode(contenu);
   liElement.appendChild(bouton);
   liElement.appendChild(texteElement);
   ulElement.appendChild(liElement);
 }
+
 
 
 //actualise la liste des favoris et sauvegarde les favoris dans le local storage
@@ -145,8 +171,10 @@ function actualiserFavoris(){
 let boutonsSupprimer = document.querySelectorAll(".btn-supprimer");
 boutonsSupprimer.forEach(bouton => {
   bouton.addEventListener("click", function() {
+
     this.parentNode.remove();
     saveToLocal();
+    miseAJourEtoilesResultat();
   });
 });
 }
@@ -167,8 +195,30 @@ function creerBoutons(liste, fonction) {
   });
 }
 
+//met a jour les étoiles des resultat lorsque l on ajoute ou enleve une blague dans nos favoris
+function miseAJourEtoilesResultat() {
+  let ulElement = document.getElementById("resultatList");
+  let elementsLi = ulElement.querySelectorAll("li");
+  elementsLi.forEach(li => {
+    let bouton = li.querySelector("button");
+    let texte = li.innerHTML.split("</button>")[1].trim();
+    if(estPresentDansListe(texte,favoris)){
+      bouton.querySelector("img").src = "images/etoile-pleine.svg";
 
+    }else{
+      bouton.querySelector("img").src =  "images/etoile-vide.svg";
+
+    }
+  });
+}
+
+
+/////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////
 // action des boutons
+/////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////
+
 
 //action du bouton de la barre de recherche, recherche une blague selon la saisie de l'utilisateur
 async function rechercheButtonOnClick() {
@@ -222,7 +272,11 @@ async function getRandomJokeByCategory(category) {
     saveToLocal();
   }
 
+/////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////
 // utilitaire
+/////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////
 
 //enregistre les favoris dans le local storage
 function saveToLocal(){
@@ -264,4 +318,16 @@ function supprimerDoublons(liste) {
   return Array.from(ensemble);
 }
 
+// Vérifie si la chaîne est présente dans la liste
+function estPresentDansListe(chaine, liste) {
+  return liste.includes(chaine);
+}
+
+function supprimerFavoris(index){
+  let ul = document.getElementById("favorisList");
+  let li = ul.querySelectorAll("li")[index];
+  li.remove()
+  saveToLocal()
+  miseAJourEtoilesResultat()
+}
 
