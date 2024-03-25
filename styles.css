@@ -1,5 +1,5 @@
 /* Importation de la police Roboto */
-
+@import url(https://fonts.googleapis.com/css?family=Roboto);
 @font-face {
   font-family: 'Chuck Norris'; 
   src: url('Chuck Norris.otf') format('otf'); 
@@ -7,7 +7,7 @@
 
 
 
-@import url(https://fonts.googleapis.com/css?family=Roboto);
+
 
 /* Définition des principales couleurs */
 :root {
@@ -35,6 +35,28 @@ body {
   margin: 40px auto;
 }
 
+button {
+  color: black;
+}
+
+#category{
+  list-style-type: none;
+  display: flex;
+  flex-flow: row wrap;
+  
+}
+
+#category li {
+  padding: 0.2em;
+}
+
+#favorisList li button {
+  background-color: darkgray;
+}
+
+#resultatList li button {
+  background-color: darkgray;
+}
 p.info-vide {
   font-style: italic;
 }

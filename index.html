@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <link rel="shortcut icon" type="image/x-icon" href="images/symbole-chuckNorris.jpg" />
     <link rel="stylesheet" href="styles.css" />
-    <script src="TestAPI.js"></script>
+    <script src="script.js"></script>
   </head>
 
   <body>
@@ -45,15 +45,7 @@
             disabled
             title="Ajouter la recherche aux favoris"
           >
-            <!-- Icone étoile vide
-							(qui indique que la recherche ne fait pas partie des favoris) -->
             <img src="images/etoile-vide.svg" alt="Etoile vide" width="22" />
-
-            <!-- Icone étoile pleine
-								(qui indique que la recherche fait partie des favoris) -->
-            <!-- <img src="images/etoile-pleine.svg" alt="Etoile pleine" width="22" > -->
-
-            <!-- (Les 2 icones d'étoile provenant de flaticon.com) -->
           </button>
         </div>
 
@@ -92,5 +84,8 @@
       </section>
     </main>
   </body>
-  <script>categorieJoke()</script>
+  <script>
+  categorieJoke();
+  getFromLocal();
+  </script>
 </html>

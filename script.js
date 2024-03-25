@@ -3,10 +3,13 @@
 const numberOfRequests = 5;
 let displayedJokes = [];
 let favoris = [];
+const localStorageFavorisId = "mesFavorisList";
 
 /////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////
+
+
 
 function viderResultat() {
   let ulElement = document.getElementById("resultatList");
@@ -21,7 +24,10 @@ function ajouterResultat(contenu, index) {
   bouton.id = "btn-favoris";
   bouton.type = "button";
   bouton.title = "Ajouter la recherche aux favoris";
-  bouton.textContent = "FAV";
+  let imageEtoile = document.createElement("img");
+  imageEtoile.src = "images/etoile-vide.svg";
+  imageEtoile.width = "22";
+  bouton.appendChild(imageEtoile);
   bouton.onclick = function() {
     ajouterFavoris(index);
   };
@@ -33,7 +39,11 @@ function ajouterResultat(contenu, index) {
 
 function ajouterFavoris(index){
   favoris.push(displayedJokes[index]);
+  let favorisSansDoublons = supprimerDoublons(favoris);
+  favoris = favorisSansDoublons;
   actualiserFavoris();
+  saveToLocal();
+
 }
 
 function actualiserFavoris(){
@@ -41,16 +51,17 @@ function actualiserFavoris(){
   champ.innerHTML = "";
   let i = 0;
   favoris.forEach(joke => {
-    let liElement = docume nt.createElement("li");
+    let liElement = document.createElement("li");
     let bouton = document.createElement("button");
     bouton.id = "btn-favoris";
     bouton.type = "button";
     bouton.title = "Ajouter la recherche aux favoris";
-    bouton.textContent = "FAV"+i;
-    bouton.onclick = function() {
-      console.log(i);
-      retirerFavoris(i);
-    };
+    let imageEtoile = document.createElement("img");
+    imageEtoile.src = "images/etoile-pleine.svg";
+    imageEtoile.width = "22";
+    bouton.appendChild(imageEtoile);
+    bouton.classList.add("btn-supprimer");
+
     let texteElement = document.createTextNode(joke);
 
     liElement.appendChild(bouton);
@@ -58,15 +69,59 @@ function actualiserFavoris(){
     champ.appendChild(liElement);
     i+=1
   });
+let boutonsSupprimer = document.querySelectorAll(".btn-supprimer");
+
+boutonsSupprimer.forEach(bouton => {
+  bouton.addEventListener("click", function() {
+    this.parentNode.remove();
+    saveToLocal();
+  });
+});
 }
 
-function retirerFavoris(index){
-  favoris.splice(index,1);
+
+function saveToLocal(){
+  // Sélectionnez la liste <ul> par son ID
+// Sélectionnez la liste <ul> par son ID
+let ulFavoris = document.getElementById("favorisList");
+
+// Sélectionnez tous les éléments <li> dans la liste <ul>
+let elementsLi = ulFavoris.querySelectorAll("li");
+
+// Créez une liste pour stocker les textes
+let listeTextes = [];
+
+// Parcourez chaque élément <li> et récupérez son texte après la balise </button>
+elementsLi.forEach(li => {
+  // Récupérez le contenu après la balise </button>
+  let texte = li.innerHTML.split("</button>")[1].trim();
+  listeTextes.push(texte); // Ajoutez le texte à la liste
+});
+
+// Affichez la liste des textes dans la console
+favoris = listeTextes;
+
+
+// Convertissez la liste des textes en chaîne JSON
+let listeTextesJSON = JSON.stringify(listeTextes);
+
+// Stockez la chaîne JSON dans le localStorage avec l'identifiant "mesFavorisList"
+localStorage.setItem("mesFavorisList", listeTextesJSON);
+
+}
+
+function getFromLocal(){
+  let listeTextesJSON = localStorage.getItem("mesFavorisList");
+
+// Convertissez la chaîne JSON en liste des textes
+let listeTextes = JSON.parse(listeTextesJSON);
+
+// Vérifiez si la liste est vide ou non
+if (listeTextes) {
+  favoris = listeTextes;
   actualiserFavoris();
 }
-
-
-
+}
 
 function getRandomJoke() {
   return fetch("https://api.chucknorris.io/jokes/random")
@@ -240,8 +295,6 @@ async function getRandomJokeByCategory(category) {
   
 
   async function categorieJoke() {
-    let champ = document.getElementById("category");
-  
     try {
       const categories = await getJokeCategories(); 
       creerBoutons(categories, getRandomJokeByCategory);
