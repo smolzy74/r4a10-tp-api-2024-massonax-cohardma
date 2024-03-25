@@ -10,13 +10,95 @@ const localStorageFavorisId = "mesFavorisList";
 /////////////////////////////////////////////////////////////
 
 
+// requete a l'API
 
+//utilise l'API pour obtenir une blague aléatoire
+function getRandomJoke() {
+  return fetch("https://api.chucknorris.io/jokes/random")
+    .then(res => {
+      if (!res.ok) {
+        throw new Error(`La requête a échoué avec le code d'état ${res.status}`);
+      }
+      return res.json();
+    })
+    .then(data => {
+      return data.value; // Retourne la valeur de la blague aléatoire
+    })
+    .catch(error => {
+      console.error("Une erreur s'est produite :", error);
+      throw error; // Relancer l'erreur pour la gérer plus tard si nécessaire
+    });
+}
+
+//utilise l'api pour obtenir une blague a partir du texte saisie
+function searchJoke(query) {
+  const apiUrl = `https://api.chucknorris.io/jokes/search?query=${encodeURIComponent(query)}`;
+
+  return fetch(apiUrl)
+    .then(res => {
+      if (!res.ok) {
+        throw new Error(`La requête a échoué avec le code d'état ${res.status}`);
+      }
+      return res.json();
+    })
+    .then(data => {
+      return data.result.map(joke => joke.value);
+    })
+    .catch(error => {
+      console.error("Une erreur s'est produite :", error);
+      throw error; // Relancer l'erreur pour la gérer plus tard si nécessaire
+    });
+}
+
+//utilise l'API pour obtenir une blague aléatoir d'une catégorie
+function getJokeFromCategory(category) {
+  const apiUrl = `https://api.chucknorris.io/jokes/random?category=${encodeURIComponent(category)}`;
+
+  return fetch(apiUrl)
+    .then(res => {
+      if (!res.ok) {
+        throw new Error(`La requête a échoué avec le code d'état ${res.status}`);
+      }
+      return res.json();
+    })
+    .then(data => {
+      return data.value; // La valeur de la blague aléatoire est déjà récupérée dans data.value
+    })
+    .catch(error => {
+      console.error("Une erreur s'est produite :", error);
+      throw error; // Relancer l'erreur pour la gérer plus tard si nécessaire
+    });
+}
+
+//utilise l'API pour obtenir la liste des catégories
+function getJokeCategories() {
+  viderResultat()
+  const apiUrl = "https://api.chucknorris.io/jokes/categories";
+  return fetch(apiUrl)
+    .then(res => {
+      if (!res.ok) {
+        throw new Error(`La requête a échoué avec le code d'état ${res.status}`);
+      }
+      return res.json();
+    })
+    .catch(error => {
+      console.error("Une erreur s'est produite :", error);
+    });
+}
+
+
+
+
+// modification du HTML
+
+//vide la page de tous les résultat affiché
 function viderResultat() {
   let ulElement = document.getElementById("resultatList");
   ulElement.innerHTML = ""; // Efface le contenu de l'élément UL
   displayedJokes = [];
 }
 
+//ajoute un résultat a la liste des resultat et l'affiche
 function ajouterResultat(contenu, index) {
   let ulElement = document.getElementById("resultatList");
   let liElement = document.createElement("li");
@@ -37,15 +119,8 @@ function ajouterResultat(contenu, index) {
   ulElement.appendChild(liElement);
 }
 
-function ajouterFavoris(index){
-  favoris.push(displayedJokes[index]);
-  let favorisSansDoublons = supprimerDoublons(favoris);
-  favoris = favorisSansDoublons;
-  actualiserFavoris();
-  saveToLocal();
 
-}
-
+//actualise la liste des favoris et sauvegarde les favoris dans le local storage
 function actualiserFavoris(){
   let champ =  document.getElementById("favorisList");
   champ.innerHTML = "";
@@ -61,16 +136,13 @@ function actualiserFavoris(){
     imageEtoile.width = "22";
     bouton.appendChild(imageEtoile);
     bouton.classList.add("btn-supprimer");
-
     let texteElement = document.createTextNode(joke);
-
     liElement.appendChild(bouton);
     liElement.appendChild(texteElement);
     champ.appendChild(liElement);
     i+=1
   });
 let boutonsSupprimer = document.querySelectorAll(".btn-supprimer");
-
 boutonsSupprimer.forEach(bouton => {
   bouton.addEventListener("click", function() {
     this.parentNode.remove();
@@ -79,162 +151,42 @@ boutonsSupprimer.forEach(bouton => {
 });
 }
 
-
-function saveToLocal(){
-  // Sélectionnez la liste <ul> par son ID
-// Sélectionnez la liste <ul> par son ID
-let ulFavoris = document.getElementById("favorisList");
-
-// Sélectionnez tous les éléments <li> dans la liste <ul>
-let elementsLi = ulFavoris.querySelectorAll("li");
-
-// Créez une liste pour stocker les textes
-let listeTextes = [];
-
-// Parcourez chaque élément <li> et récupérez son texte après la balise </button>
-elementsLi.forEach(li => {
-  // Récupérez le contenu après la balise </button>
-  let texte = li.innerHTML.split("</button>")[1].trim();
-  listeTextes.push(texte); // Ajoutez le texte à la liste
-});
-
-// Affichez la liste des textes dans la console
-favoris = listeTextes;
-
-
-// Convertissez la liste des textes en chaîne JSON
-let listeTextesJSON = JSON.stringify(listeTextes);
-
-// Stockez la chaîne JSON dans le localStorage avec l'identifiant "mesFavorisList"
-localStorage.setItem("mesFavorisList", listeTextesJSON);
-
-}
-
-function getFromLocal(){
-  let listeTextesJSON = localStorage.getItem("mesFavorisList");
-
-// Convertissez la chaîne JSON en liste des textes
-let listeTextes = JSON.parse(listeTextesJSON);
-
-// Vérifiez si la liste est vide ou non
-if (listeTextes) {
-  favoris = listeTextes;
-  actualiserFavoris();
-}
-}
-
-function getRandomJoke() {
-  return fetch("https://api.chucknorris.io/jokes/random")
-    .then(res => {
-      if (!res.ok) {
-        throw new Error(`La requête a échoué avec le code d'état ${res.status}`);
-      }
-      return res.json();
-    })
-    .then(data => {
-      return data.value; // Retourne la valeur de la blague aléatoire
-    })
-    .catch(error => {
-      console.error("Une erreur s'est produite :", error);
-      throw error; // Relancer l'erreur pour la gérer plus tard si nécessaire
+//génére les boutons des catégories
+function creerBoutons(liste, fonction) {
+  const conteneurListe = document.getElementById("category");
+  conteneurListe.innerHTML = "";
+  liste.forEach(mot => {
+    const bouton = document.createElement("button");
+    bouton.textContent = mot;
+    bouton.addEventListener("click", () => {
+      fonction(mot);
     });
+    const elementLi = document.createElement("li");
+    elementLi.appendChild(bouton);
+    conteneurListe.appendChild(elementLi);
+  });
 }
 
 
-/////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////
+// action des boutons
 
-////////////////////////////RECHERCHE D'UNE BLAGUE AVEC UNE CHAINE DE CARACTERES/////////////////////////////////
-
-function searchJoke(query) {
-  const apiUrl = `https://api.chucknorris.io/jokes/search?query=${encodeURIComponent(query)}`;
-
-  return fetch(apiUrl)
-    .then(res => {
-      if (!res.ok) {
-        throw new Error(`La requête a échoué avec le code d'état ${res.status}`);
-      }
-      return res.json();
-    })
-    .then(data => {
-      return data.result.map(joke => joke.value);
-    })
-    .catch(error => {
-      console.error("Une erreur s'est produite :", error);
-      throw error; // Relancer l'erreur pour la gérer plus tard si nécessaire
-    });
-}
-
-
-function getJokeFromCategory(category) {
-  const apiUrl = `https://api.chucknorris.io/jokes/random?category=${encodeURIComponent(category)}`;
-
-  return fetch(apiUrl)
-    .then(res => {
-      if (!res.ok) {
-        throw new Error(`La requête a échoué avec le code d'état ${res.status}`);
-      }
-      return res.json();
-    })
-    .then(data => {
-      return data.value; // La valeur de la blague aléatoire est déjà récupérée dans data.value
-    })
-    .catch(error => {
-      console.error("Une erreur s'est produite :", error);
-      throw error; // Relancer l'erreur pour la gérer plus tard si nécessaire
-    });
-}
-
-
-
-
-/////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////
-
-
-
-/////////////////////////LISTE DES CATEGORIES////////////////////////////////////
-function getJokeCategories() {
-  viderResultat()
-  const apiUrl = "https://api.chucknorris.io/jokes/categories";
-
-  return fetch(apiUrl)
-    .then(res => {
-      if (!res.ok) {
-        throw new Error(`La requête a échoué avec le code d'état ${res.status}`);
-      }
-      return res.json();
-    })
-    .catch(error => {
-      console.error("Une erreur s'est produite :", error);
-    });
-}
-
-
-
-
+//action du bouton de la barre de recherche, recherche une blague selon la saisie de l'utilisateur
 async function rechercheButtonOnClick() {
   viderResultat()
   let saisie = document.getElementById("rechercheField").value;
-
-  try {
-    const jokes = await searchJoke(saisie); // Attend la résolution de la promesse
-    displayedJokes = jokes;
-    for(i=0;i<10;i+=1){
-      ajouterResultat(jokes[i],i);
+  if(saisie){
+    try {
+      displayedJokes = jokes;
+      for(i=0;i<10;i+=1){
+        ajouterResultat(jokes[i],i);
+      }
+      } catch (error) {
+      console.error("Une erreur s'est produite :", error);
     }
-
-
-
-    // Sélectionner les 10 premières blagues et les rejoindre avec des retours à la ligne
-    } catch (error) {
-    console.error("Une erreur s'est produite :", error);
   }
 }
 
-
+//action du bouton blague aléatoire, recherche une blague aléatoire 
 async function randomJokeOnClick() {
   viderResultat()
   try {
@@ -246,18 +198,8 @@ async function randomJokeOnClick() {
   }
 }
 
-function supprimerDoublons(liste) {
-  // Créer un nouvel ensemble à partir de la liste pour éliminer les doublons
-  let ensemble = new Set(liste);
-  // Convertir l'ensemble en tableau et le retourner
-  return Array.from(ensemble);
-}
-
-
-
-//////////////////////////AFFICHER UNE BLAGUE ALEATOIRE D'UNE CATEGORIE//////////////////////////////////
+//action du bouton d'une catégorie, sors des blagues aléatoirement a partir d'une catégorie
 async function getRandomJokeByCategory(category) {
-
   let jokes=[];
   for(i=0;i<10;i++){
     jokes.push(await getJokeFromCategory(category));
@@ -269,38 +211,57 @@ async function getRandomJokeByCategory(category) {
     jokes.forEach(joke => {
       ajouterResultat(joke,j++);
     });
-    
   }
-  
-  function creerBoutons(liste, fonction) {
-    const conteneurListe = document.getElementById("category");
-  
-    conteneurListe.innerHTML = "";
-  
 
-    liste.forEach(mot => {
-      const bouton = document.createElement("button");
-      bouton.textContent = mot;
-      bouton.addEventListener("click", () => {
-        fonction(mot);
-      });
-  
-      const elementLi = document.createElement("li");
-      elementLi.appendChild(bouton);
-  
-      conteneurListe.appendChild(elementLi);
-    });
+  //action du bouton ajouter au favoris, ajoute aux favoris la blague et enregistre les favoris dans le local storage
+  function ajouterFavoris(index){
+    favoris.push(displayedJokes[index]);
+    let favorisSansDoublons = supprimerDoublons(favoris);
+    favoris = favorisSansDoublons;
+    actualiserFavoris();
+    saveToLocal();
   }
-  
-  
 
-  async function categorieJoke() {
-    try {
-      const categories = await getJokeCategories(); 
-      creerBoutons(categories, getRandomJokeByCategory);
-    } catch (error) {
-      console.error("Une erreur:", error);
-    }
+// utilitaire
+
+//enregistre les favoris dans le local storage
+function saveToLocal(){
+  let ulFavoris = document.getElementById("favorisList");
+  let elementsLi = ulFavoris.querySelectorAll("li");
+  let listeTextes = [];
+  elementsLi.forEach(li => {
+    let texte = li.innerHTML.split("</button>")[1].trim();
+    listeTextes.push(texte);
+  });
+  favoris = listeTextes;
+  let listeTextesJSON = JSON.stringify(listeTextes);
+  localStorage.setItem("mesFavorisList", listeTextesJSON);
   }
-  
+
+  //récupere les favoris enregistré dans le local storage
+function getFromLocal(){
+  let listeTextesJSON = localStorage.getItem("mesFavorisList");
+  let listeTextes = JSON.parse(listeTextesJSON);
+  if (listeTextes) {
+    favoris = listeTextes;
+    actualiserFavoris();
+  }
+}
+
+//initialise la page, récupére et génére les boutons des catégories
+async function categorieJoke() {
+  try {
+    const categories = await getJokeCategories(); 
+    creerBoutons(categories, getRandomJokeByCategory);
+  } catch (error) {
+    console.error("Une erreur:", error);
+  }
+}
+
+//supprime les doublons dans une liste donné
+function supprimerDoublons(liste) {
+  let ensemble = new Set(liste);
+  return Array.from(ensemble);
+}
+
 
