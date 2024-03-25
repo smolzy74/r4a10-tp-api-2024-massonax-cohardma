@@ -226,6 +226,7 @@ async function rechercheButtonOnClick() {
   viderResultat()
   let saisie = document.getElementById("rechercheField").value;
   if(saisie){
+    jokes = await searchJoke(saisie)
     try {
       displayedJokes = jokes;
       for(i=0;i<10;i+=1){
