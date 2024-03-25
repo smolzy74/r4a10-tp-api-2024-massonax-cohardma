@@ -1,8 +1,8 @@
 /* Importation de la police Roboto */
 @import url(https://fonts.googleapis.com/css?family=Roboto);
 @font-face {
-  font-family: 'Chuck Norris'; 
-  src: url('Chuck Norris.otf') format('otf'); 
+  font-family: 'ChuckNorris'; 
+  src: url('Chuck%20Norris.otf') format('opentype'); 
 }
 
 
@@ -12,6 +12,7 @@
 /* Définition des principales couleurs */
 :root {
   --text-color: #fafafa; /* (Texte presque blanc) */
+  --font-family: "ChuckNorris";
   --background: #34495e; /* (Fond bleu foncé) */
   --background-button: #bebebe;
   --main-green: rgb(26, 188, 156);
@@ -23,12 +24,13 @@
   color: var(--text-color);
 }
 p {
+  font-family: 'ChuckNorris', Roboto, sans-serif;
   background-image: url('images/flamme.gif');
 }
 
 body {
   background-image: url('images/background-chuckNorris.jpg');
-  font-family: 'Chuck Norris', Roboto, Arial, sans-serif;
+ 
   margin: 0;
   padding: 0;
   width: 90%;
@@ -45,15 +47,30 @@ button {
   flex-flow: row wrap;
   
 }
+#category li button{
+  color: white;
+background-image: url(images/chucknorrisboutons.jpg);
+}
+
 
 #category li {
   padding: 0.2em;
 }
-
-#favorisList li button {
-  background-color: darkgray;
+#favorisList {
+  font-family: 'ChuckNorris', Roboto, sans-serif;
 }
 
+
+#favorisList li button {
+  
+  background-color: darkgray;
+}
+#resultatList{
+ 
+  font-family: 'ChuckNorris', Roboto, sans-serif;
+
+  background-image: url(images/flamme.gif);
+}
 #resultatList li button {
   background-color: darkgray;
 }
@@ -64,8 +81,18 @@ p.info-vide {
 /* Partie En-tête */
 h1 {
   text-align: center;
-  font-family: 'Chuck Norris';
+  font-family: 'ChuckNorris', Roboto, sans-serif;
   font-size: 2.5em;
+}
+h1 img {
+  width:1.5%; 
+  height: auto; 
+}
+
+#joke_random_button {
+  color: white;
+  background-image: url(images/chucknorrisboutons.jpg);
+  font-family: 'ChuckNorris', Roboto, sans-serif;
 }
 
 #explication {
@@ -94,29 +121,36 @@ h1 {
   flex-direction: row;
 }
 
+#rechercheField::placeholder {
+    font-family: 'ChuckNorris', Roboto, sans-serif;
+  }
+
 #bloc-recherche > input[type="text"],
 #bloc-recherche > button {
   display: block;
   font-size: 1.2em;
+  
+  
 }
 
 #bloc-recherche > input[type="text"] {
-  color: var(--almost-black);
+  color: white;
   flex: 1;
   padding: 0.7em;
-  border: 0.3em solid var(--main-green);
-  border-image: url('images/flamme.gif');
+  
+  background-image: url(images/flamme.gif);
+  
 }
 
 #bloc-recherche > button {
   padding: 0.8em 0.8em;
   /* Bordure invisible pour que le hover ne bouge pas le bouton */
-  border: 1px solid var(--main-green);
+ 
 
   /* Par défaut, les boutons sont en gris
 	 (S'ils sont "clicables", ils passent en vert) */
-  background-color: var(--background-button);
-  border-image: url('images/flamme.gif');
+
+
 }
 
 /* Apparences des boutons clicables */
@@ -164,7 +198,10 @@ h1 {
   margin-top: 0;
   margin-bottom: 20px;
 }
-
+h2{
+  font-family: 'ChuckNorris', Roboto, sans-serif;
+ 
+}
 #section-favoris h2 {
   margin-top: 0;
 }

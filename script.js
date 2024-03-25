@@ -186,6 +186,7 @@ function creerBoutons(liste, fonction) {
   liste.forEach(mot => {
     const bouton = document.createElement("button");
     bouton.textContent = mot;
+    bouton.style.fontFamily = "'ChuckNorris', Roboto, sans-serif";
     bouton.addEventListener("click", () => {
       fonction(mot);
     });
